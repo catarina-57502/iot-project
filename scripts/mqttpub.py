@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""a simple sensor data generator that sends to an MQTT broker via paho"""
+
 import sys
 import json
 import time
@@ -7,49 +7,94 @@ import paho.mqtt.client as mqtt
 import os
 import signal
 import getopt
+import threading
 
 
-dataset = [{"data": [{"value": 5.4},{"value": 3.4},{"value": 1.7},{"value": 0.2}]}, #Iris-setosa
-           {"data": [{"value": 5.0},{"value": 3.5},{"value": 1.6},{"value": 0.6}]}, #Iris-setosa
-           {"data": [{"value": 5.5},{"value": 2.4},{"value": 3.8},{"value": 1.1}]}, #Iris-versicolor
-           {"data": [{"value": 5.7},{"value": 3.0},{"value": 4.2},{"value": 1.2}]}, #1Iris-versicolor
-           {"data": [{"value": 7.3},{"value": 2.9},{"value": 6.3},{"value": 1.8}]}, #Iris-virginica
-           {"data": [{"value": 6.0},{"value": 3.0},{"value": 4.8},{"value": 1.8}]}, #Iris-virginica
-]
+FILEOFFLINE = "../dataSets/offline_.json"
 
+
+broker = "broker.hivemq.com"
+port = 1883
+
+mqttc = mqtt.Client("Publisher")
+mqttc.connect(broker, port)
+mqttc.loop_start()
+
+f = open(FILEOFFLINE)
 
 def signal_handler(sig, frame):
-    #print('You pressed Ctrl+C.\nProgram closed.')
     sys.exit(0)
 
+signal.signal(signal.SIGINT, signal_handler)
 
-def main(argv):
+data = json.load(f)
 
-    signal.signal(signal.SIGINT, signal_handler)
-    
-    broker = "broker.hivemq.com" 
-    port = 1883
-    topic = "classification"
+def Battery01(data):
+    topicBat01 = "idc/fc05/bat01"
 
-    num_msgs_send = len(dataset)
+    for cycle in data:
+        if(data[cycle]["battery_ID"] == "1"):
+            size = len(data[cycle]["voltage_battery"])
+            print(size)
+            for i in range(size):
+                try:
+                    jso = { "battery_ID": data[cycle]["battery_ID"],
+                        "cycle_number": data[cycle]["cycle_number"],
+                        "type": data[cycle]["type"],
+                        "amb_temp": data[cycle]["amb_temp"],
+                        "date_time": data[cycle]["date_time"],
+                        "voltage_battery": data[cycle]["voltage_battery"][i],
+                        "current_battery": data[cycle]["current_battery"][i],
+                        "temp_battery": data[cycle]["temp_battery"][i],
+                        "current_load": data[cycle]["current_load"][i],
+                        "voltage_load": data[cycle]["voltage_load"][i],
+                        "time": data[cycle]["time"][i],
+                        "elapsed_time": data[cycle]["elapsed_time"]
+                    }
+                    payload =  json.dumps(jso)
+                    print(payload)
+                    mqttc.publish(topicBat01, payload)
+                    time.sleep(1)
+                except KeyboardInterrupt:
+                    sys.exit()
 
-    mqttc = mqtt.Client("Publisher")
-    mqttc.connect(broker, port)
-    msgs_sent = 0
-    mqttc.loop_start()
-
-    for i in range(num_msgs_send):
-        try:
-            payload = json.dumps(dataset[i])
-            print("Sending msg: " + payload)
-            mqttc.publish(topic, payload)
-            msgs_sent += 1
-            time.sleep(5)
-        except KeyboardInterrupt:
-            sys.exit()
-    mqttc.loop_stop()
 
     print("Messages sent: " + str(msgs_sent))
 
-if __name__ == "__main__": 
-    main(sys.argv[1:])
+def Battery02(data):
+    topicBat02 = "idc/fc05/bat02"
+
+    for cycle in data:
+        if (data[cycle]["battery_ID"]) == "2":
+            size = len(data[cycle]["voltage_battery"])
+            print(size)
+            for i in range(size):
+                try:
+                    jso = { "battery_ID": data[cycle]["battery_ID"],
+                        "cycle_number": data[cycle]["cycle_number"],
+                        "type": data[cycle]["type"],
+                        "amb_temp": data[cycle]["amb_temp"],
+                        "date_time": data[cycle]["date_time"],
+                        "voltage_battery": data[cycle]["voltage_battery"][i],
+                        "current_battery": data[cycle]["current_battery"][i],
+                        "temp_battery": data[cycle]["temp_battery"][i],
+                        "current_load": data[cycle]["current_load"][i],
+                        "voltage_load": data[cycle]["voltage_load"][i],
+                        "time": data[cycle]["time"][i],
+                        "elapsed_time": data[cycle]["elapsed_time"]
+                    }
+                    payload =  json.dumps(jso)
+                    print(payload)
+                    mqttc.publish(topicBat02, payload)
+                    time.sleep(1)
+                except KeyboardInterrupt:
+                    sys.exit()
+
+
+    print("Messages sent: " + str(msgs_sent))
+
+if __name__ == "__main__":
+    bat01 = threading.Thread(target=Battery01, args=(data,))
+    bat02 = threading.Thread(target=Battery02, args=(data,))
+    bat01.start()
+    bat02.start()
