@@ -12,6 +12,14 @@ IP
 ```
 http://$PUBLIC_IP$:1880/
 ```
+## Unzip Dataset
+
+```
+cd datasets
+unzip online_1.zip
+```
+
+
 ## Import flow
 
 Import  
