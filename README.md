@@ -12,13 +12,12 @@ IP
 ```
 http://$PUBLIC_IP$:1880/
 ```
-## Unzip Dataset
+
+## DB String
 
 ```
-cd datasets
-unzip online_1.zip
+mongodb+srv://admin:admin@iot.qwwov.mongodb.net/test
 ```
-
 
 ## Import flow
 
