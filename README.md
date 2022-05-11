@@ -16,7 +16,7 @@ http://$PUBLIC_IP$:1880/
 ## DB String
 
 ```
-mongodb+srv://admin:admin@iot.qwwov.mongodb.net/test
+mongodb+srv://admin:admin@iot.qwwov.mongodb.net
 ```
 
 ## Import flow
