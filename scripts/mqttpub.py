@@ -13,7 +13,7 @@ import threading
 FILEOFFLINE = "../dataSets/offline_.json"
 
 
-broker = "broker.hivemq.com"
+broker = "34.152.63.25"
 port = 1883
 
 mqttc = mqtt.Client("Publisher")
@@ -30,7 +30,7 @@ signal.signal(signal.SIGINT, signal_handler)
 data = json.load(f)
 
 def Battery01(data):
-    topicBat01 = "idc/fc05/bat01"
+    topicBat01 = "idc"
 
     for cycle in data:
         if(data[cycle]["battery_ID"] == "1"):
@@ -54,7 +54,7 @@ def Battery01(data):
                     payload =  json.dumps(jso)
                     print(payload)
                     mqttc.publish(topicBat01, payload)
-                    time.sleep(1)
+                    time.sleep(5)
                 except KeyboardInterrupt:
                     sys.exit()
 
@@ -86,7 +86,7 @@ def Battery02(data):
                     payload =  json.dumps(jso)
                     print(payload)
                     mqttc.publish(topicBat02, payload)
-                    time.sleep(1)
+                    time.sleep(5)
                 except KeyboardInterrupt:
                     sys.exit()
 

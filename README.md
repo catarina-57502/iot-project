@@ -1,7 +1,7 @@
 # Projeto IoT
 
 ## Run Cloud
-
+### Node Red
 Start virtual machine  
 Open SSL terminal  
 Run:
@@ -13,13 +13,27 @@ IP
 http://$PUBLIC_IP$:1880/
 ```
 
-## DB String
+### DB String
 
 ```
 mongodb+srv://admin:admin@iot.qwwov.mongodb.net
 ```
 
-## Import flow
+### Start Mosquitto Broker 
+Start VM mosquitto-broker-iot  
+
+
+Run:  
+```
+mosquitto_sub -t "idc"
+```
+
+To test if broker is working you can run:
+```
+mosquitto_pub -m "test test 1 2 3 im alive" -t "idc"
+```
+Check the ip of the VM to use on node-red ($IP$:1883)
+### Import flow
 
 Import  
 Select node-red/flow.json  
