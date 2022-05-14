@@ -1,7 +1,7 @@
 import json
 from pymongo import MongoClient
 
-FILE = '../datasets/online_1/offline_.json'
+FILE = 'offline_.json'
 
 
 def writeCSVtoDB(File,tableDB):
