@@ -15,9 +15,7 @@ http://$PUBLIC_IP$:1880/
 
 ### DB String
 
-```
-mongodb+srv://admin:admin@iot.qwwov.mongodb.net
-```
+DB on the VM
 
 ### Start Mosquitto Broker 
 Start VM mosquitto-broker-iot  
@@ -25,12 +23,13 @@ Start VM mosquitto-broker-iot
 
 Run:  
 ```
-mosquitto_sub -t "idc"
+mosquitto_sub -t "idc/bat01"
+mosquitto_sub -t "idc/bat02"
 ```
 
 To test if broker is working you can run:
 ```
-mosquitto_pub -m "test test 1 2 3 im alive" -t "idc"
+mosquitto_pub -m "test" -t "idc"
 ```
 Check the ip of the VM to use on node-red ($IP$:1883)
 ### Import flow
