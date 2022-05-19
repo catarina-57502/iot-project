@@ -14,7 +14,7 @@ FILEBAT01 = "../db/online_1.json"
 FILEBAT02 = "../db/online_2.json"
 
 
-broker = "35.203.65.131"
+broker = "35.203.38.46"
 port = 1883
 mqttc = mqtt.Client("Publisher")
 
@@ -32,6 +32,7 @@ def Battery01():
     topicBat01 = "idc/bat01"
     for cycle in data:
         size = len(data[cycle]["voltage_battery"])
+        count = 0
         for i in range(size):
             try:
                 jso = { "battery_ID": data[cycle]["battery_ID"],
@@ -49,7 +50,6 @@ def Battery01():
                 time.sleep(5)
             except KeyboardInterrupt:
                 sys.exit()
-    print("Messages sent: " + str(msgs_sent))
 
 def Battery02():
     f = open(FILEBAT02)
@@ -71,10 +71,9 @@ def Battery02():
                 payload =  json.dumps(jso)
                 print(payload)
                 mqttc.publish(topicBat01, payload)
-                time.sleep(6)
+                time.sleep(7)
             except KeyboardInterrupt:
                 sys.exit()
-    print("Messages sent: " + str(msgs_sent))
 
 if __name__ == "__main__":
     bat01 = threading.Thread(target=Battery01, args=())
