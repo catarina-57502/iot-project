@@ -14,7 +14,7 @@ FILEBAT01 = "../db/online_1.json"
 FILEBAT02 = "../db/online_2.json"
 
 
-broker = "35.203.38.46"
+broker = "35.203.121.245"
 port = 1883
 mqttc = mqtt.Client("Publisher")
 
@@ -32,7 +32,6 @@ def Battery01():
     topicBat01 = "idc/bat01"
     for cycle in data:
         size = len(data[cycle]["voltage_battery"])
-        count = 0
         for i in range(size):
             try:
                 jso = { "battery_ID": data[cycle]["battery_ID"],
